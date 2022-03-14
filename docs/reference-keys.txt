@@ -59,3 +59,13 @@ balance-diagnostics---manhattan
 tab:unnamed-chunk-15
 tab:unnamed-chunk-16
 total
+unmatched-regression-models
+outcome-model
+within-borough-matching-model
+outcome-model-manhattan
+outcome-model-bronx
+outcome-model-brooklyn
+outcome-model-queens
+fixed-effects-1
+matched-estimates-2
+match-on-boroughs-1

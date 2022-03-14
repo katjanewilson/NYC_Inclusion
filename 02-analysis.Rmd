@@ -1,5 +1,9 @@
 ---
 site: bookdown::bookdown_site
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
 ---
 
 ```{r include=FALSE}
@@ -167,7 +171,7 @@ working_data %>%
 
 ```
 
-### Naive Regression Models
+### Unmatched Regression Models
 
 Treatment (inclusion) is a significant predictor of absenteeism (CA), without matching. However, five covariates generally associated with higher absenteeism are predictive of both the treatment and the outcome, making them confounders.
 
@@ -597,12 +601,49 @@ bal.plot(school_nearest, var.name = 'ENI', which = "both")
 
 ```
 
-### Within Borough Matching
 
 
-### Balance Diagnostics
+#### Outcome Model
 
-Not shown here, but balance achieved for 4/5 boroughs. SI too small
+$$
+\begin{align}
+ChronicAbsenteeism = \beta_0 +\beta_1Treatment + BoroughFixedEffects + \epsilon
+\end{align}
+$$
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+working_data <- merged
+#iptw
+working_data$ps <- school_nearest$distance
+  #create IPTW weights - 0 is no SC, which is the treatment
+  working_data$new_outcome_labelled <- ifelse(working_data$treatment == 1, "no SC", "SC")
+  working_data$iptw <- ifelse(working_data$treatment == 1, 1/(working_data$ps),1/(1-working_data$ps))
+  working_data$stable.iptw <-ifelse(working_data$treatment == 1,(mean(working_data$ps))/working_data$ps,mean(1-working_data$ps)/(1-working_data$ps))
+  
+  working_data_weighted <-svydesign(ids =~1, data=working_data,weights = working_data$iptw)
+  school_covariates <-c("PercentBlack", "PercentSWD", "PercentPoverty", "ENI", "TotalEnrollment", "borough")
+  
+  ecls_table <-svyCreateTableOne(vars=school_covariates,strata="new_outcome_labelled",data=working_data_weighted,test=F)
+  nearest_matched <- match.data(school_nearest)
+library(broom)
+## estimating treatment effects
+lm(`% Chronically Absent` ~ treatment + borough, weights=working_data$iptw,data=working_data) %>%
+ tidy() %>%
+  kable(caption =  "Borough as Match Model, IPTW estimates of the ATE",
+        col.names = c("Predictor", "B", "SE", "t", "p"),
+        digits = c(0,2,3,2,3))
+
+```
+
+
+
+### Within Borough Matching Model
+
+
+#### Balance Diagnostics
+
+Not shown here, but balance achieved for 4/5 boroughs. We can discuss the balance diagnostics of within borough in the writeup. N for Staten Island is too small for within borough matching.
 
 ```{r echo=FALSE, fig.show="hold", fig.width=5, fig.height = 3, message=FALSE, warning=FALSE}
 
@@ -639,33 +680,7 @@ ChronicAbsenteeism = \beta_0 +\beta_1Treatment + \epsilon
 \end{align}
 $$
 
-### Total
-
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-
-working_data <- merged
-#iptw
-working_data$ps <- school_nearest$distance
-  #create IPTW weights - 0 is no SC, which is the treatment
-  working_data$new_outcome_labelled <- ifelse(working_data$treatment == 1, "no SC", "SC")
-  working_data$iptw <- ifelse(working_data$treatment == 1, 1/(working_data$ps),1/(1-working_data$ps))
-  working_data$stable.iptw <-ifelse(working_data$treatment == 1,(mean(working_data$ps))/working_data$ps,mean(1-working_data$ps)/(1-working_data$ps))
-  
-  working_data_weighted <-svydesign(ids =~1, data=working_data,weights = working_data$iptw)
-  school_covariates <-c("PercentBlack", "PercentSWD", "PercentPoverty", "ENI", "TotalEnrollment", "borough")
-  
-  ecls_table <-svyCreateTableOne(vars=school_covariates,strata="new_outcome_labelled",data=working_data_weighted,test=F)
-  nearest_matched <- match.data(school_nearest)
-library(broom)
-## estimating treatment effects
-lm(`% Chronically Absent` ~ treatment + borough, weights=working_data$iptw,data=working_data) %>%
- tidy() %>%
-  kable(caption =  "Total",
-        col.names = c("Predictor", "B", "SE", "t", "p"),
-        digits = c(0,2,3,2,3))
-
-```
-### Manhattan
+#### Outcome Model: Manhattan
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -686,12 +701,12 @@ library(broom)
 ## estimating treatment effects
 lm(`% Chronically Absent` ~ treatment, weights=working_data$iptw,data=working_data) %>%
  tidy() %>%
-  kable(caption =  "Manhattan",
+  kable(caption =  "Within Manhattan Matched: IPTW estimates of the ATE",
         col.names = c("Predictor", "B", "SE", "t", "p"),
         digits = c(0,2,3,2,3))
 
 ```
-### Bronx
+#### Outcome Model: Bronx
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -712,13 +727,13 @@ library(broom)
 ## estimating treatment effects
 lm(`% Chronically Absent` ~ treatment, weights=working_data$iptw,data=working_data) %>%
  tidy() %>%
-  kable(caption =  "Bronx",
+  kable(caption =  "Within Bronx Matched: IPTW estimates of the ATE",
         col.names = c("Predictor", "B", "SE", "t", "p"),
         digits = c(0,2,3,2,3))
 
 ```
 
-### Brooklyn
+#### Outcome Model: Brooklyn
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -739,13 +754,13 @@ library(broom)
 ## estimating treatment effects
 lm(`% Chronically Absent` ~ treatment, weights=working_data$iptw,data=working_data) %>%
  tidy() %>%
-  kable(caption =  "Brooklyn",
+  kable(caption =  "Within Brooklyn Matched: IPTW estimates of the ATE",
         col.names = c("Predictor", "B", "SE", "t", "p"),
         digits = c(0,2,3,2,3))
 
 ```
 
-### Queens
+#### Outcome Model: Queens
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -766,7 +781,7 @@ library(broom)
 ## estimating treatment effects
 lm(`% Chronically Absent` ~ treatment, weights=working_data$iptw,data=working_data) %>%
  tidy() %>%
-  kable(caption =  "Queens",
+  kable(caption =  "Within Queens Matched: IPTW estimates of the ATE",
         col.names = c("Predictor", "B", "SE", "t", "p"),
         digits = c(0,2,3,2,3))
 

@@ -24,7 +24,7 @@
 <meta name="author" content="Katherine Wilson, Wendy Chan, Michael Gottfried" />
 
 
-<meta name="date" content="2022-03-08" />
+<meta name="date" content="2022-03-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -80,24 +80,13 @@
 <ul>
 <li class="chapter" data-level="2.1.1" data-path="research-questions.html"><a href="research-questions.html#data-overview"><i class="fa fa-check"></i><b>2.1.1</b> Data Overview</a></li>
 <li class="chapter" data-level="2.1.2" data-path="research-questions.html"><a href="research-questions.html#raw-differences-in-outcome-and-covariates"><i class="fa fa-check"></i><b>2.1.2</b> Raw differences in Outcome and Covariates</a></li>
-<li class="chapter" data-level="2.1.3" data-path="research-questions.html"><a href="research-questions.html#naive-regression-models"><i class="fa fa-check"></i><b>2.1.3</b> Naive Regression Models</a></li>
+<li class="chapter" data-level="2.1.3" data-path="research-questions.html"><a href="research-questions.html#unmatched-regression-models"><i class="fa fa-check"></i><b>2.1.3</b> Unmatched Regression Models</a></li>
 <li class="chapter" data-level="2.1.4" data-path="research-questions.html"><a href="research-questions.html#visualizing-inclusion-in-nyc"><i class="fa fa-check"></i><b>2.1.4</b> Visualizing Inclusion in NYC</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="research-questions.html"><a href="research-questions.html#question-2"><i class="fa fa-check"></i><b>2.2</b> Question 2</a>
 <ul>
 <li class="chapter" data-level="2.2.1" data-path="research-questions.html"><a href="research-questions.html#borough-as-match-model"><i class="fa fa-check"></i><b>2.2.1</b> Borough as Match Model</a></li>
-<li class="chapter" data-level="2.2.2" data-path="research-questions.html"><a href="research-questions.html#within-borough-matching"><i class="fa fa-check"></i><b>2.2.2</b> Within Borough Matching</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="fixed-effects.html"><a href="fixed-effects.html"><i class="fa fa-check"></i><b>3</b> Fixed Effects</a>
-<ul>
-<li class="chapter" data-level="3.0.1" data-path="fixed-effects.html"><a href="fixed-effects.html#data-cleaning"><i class="fa fa-check"></i><b>3.0.1</b> Data cleaning</a></li>
-<li class="chapter" data-level="3.0.2" data-path="fixed-effects.html"><a href="fixed-effects.html#covariates"><i class="fa fa-check"></i><b>3.0.2</b> Covariates</a></li>
-<li class="chapter" data-level="3.1" data-path="fixed-effects.html"><a href="fixed-effects.html#matching"><i class="fa fa-check"></i><b>3.1</b> Matching</a>
-<ul>
-<li class="chapter" data-level="3.1.1" data-path="fixed-effects.html"><a href="fixed-effects.html#assess-balance"><i class="fa fa-check"></i><b>3.1.1</b> Assess Balance</a></li>
-<li class="chapter" data-level="3.1.2" data-path="fixed-effects.html"><a href="fixed-effects.html#matched-estimates-1"><i class="fa fa-check"></i><b>3.1.2</b> Matched Estimates</a></li>
-<li class="chapter" data-level="3.1.3" data-path="fixed-effects.html"><a href="fixed-effects.html#within-borough-matching-1"><i class="fa fa-check"></i><b>3.1.3</b> within borough matching</a></li>
+<li class="chapter" data-level="2.2.2" data-path="research-questions.html"><a href="research-questions.html#within-borough-matching-model"><i class="fa fa-check"></i><b>2.2.2</b> Within Borough Matching Model</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -123,11 +112,11 @@
 <h1 class="title">The Influence of Inclusion on Attendance</h1>
 <h2 class="subtitle"><em>A Matched Comparison Study of NYC Public Schools</em></h2>
 <p class="author"><em>Katherine Wilson, Wendy Chan, Michael Gottfried</em></p>
-<p class="date"><em>2022-03-08</em></p>
+<p class="date"><em>2022-03-14</em></p>
 </div>
 <div id="abstract" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Abstract</h1>
-<p>As researchers begin to understand more of what makes a single classroom effective, many are moving to a new question: what makes an entire school effective? One school level factor of interest are class options: that is, the method that students are arranged by ability level. Here, we focus on the organization of special education students. In New York City public schools, some schools have a self-contained option for students with special needs. In these schools, students with disabilities (SWD) are educated in a seperate classroom, away from their general education peers. Other schools have no self-contained option, where SWD are educated along with their gen-ed peers, with necessary support. In this study, we explore whether such a visible, detached, class option might affect attendance rates both for students with special needs and for those without. We find that when students with disabilities learn alongside students without disabilities, chronic absenteeism for all students decreases, and theorize that the effect is due to all students in the school feel a greater sense of belonging or conenction with the school. Using rigorous causal inference methods with a nuanced treatment of the propenstiy score and borough fixed effects, we match 1,200 NYC public schools on key covariates to identify the effect of inclusion on school attendance.</p>
+<p>As researchers begin to better understand classroom level interventions that improve student outcomes, many are curious about a new question: what school level factors might also influence student outcomes? One school level factor of interest are “class options”, or the ways that students are organized in classrooms according to ability level. Here, we focus specifically on one historically contentious class option for students with disabilities: the self-contained class. Our focus is New York City, the largest school district in the country, where class options vary widely across public schools. A majority of schools have a self-contained class option, where students with disabilities (SWD) are educated in a separate classroom, away from their gen-ed peers. Other schools have no self-contained option, and SWD are educated along with their gen-ed peers, with necessary in-class support and pull-out services. In this study, we explore whether such a visible, detached, class option might affect attendance rates for both SWD and for gen-ed students. We find that in schools with full inclusion models, where SWD learn alongside students without disabilities, chronic absenteeism for all students decreases. We theorize that the effect is due to a greater sense of belonging with the school community that inclusion fosters. Using rigorous causal inference methods with a nuanced treatment of the propensity score to identify heterogeneous treatment effects, particularly among low-income schools, we match 1,125 NYC public schools on key covariates to identify the effect of inclusion on school attendance.</p>
 
 </div>
             </section>
