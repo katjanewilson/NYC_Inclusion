@@ -2,8 +2,9 @@
 title: "The Influence of Inclusion on Attendance"
 author: "Katherine Wilson, Wendy Chan, Michael Gottfried"
 date: "`r Sys.Date()`"
-subtitle: A Matched Comparison Study of NYC Public Schools
+output: pdf_document
 site: bookdown::bookdown_site
+subtitle: A Matched Comparison Study of NYC Public Schools
 ---
 
 
